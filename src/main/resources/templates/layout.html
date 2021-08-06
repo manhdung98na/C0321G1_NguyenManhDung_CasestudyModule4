@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="/assert/bootstrap5/css/bootstrap.min.css"/>
+    <title>Furama Resort</title>
+    <style>
+        small {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+    <a class="navbar-brand p-2" href="/">Furama Resort</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">Menu</span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a href="/customer" class="nav-link">Customer</a></li>
+            <li class="nav-item"><a href="/service" class="nav-link">Service</a></li>
+            <li class="nav-item"><a href="/contract" class="nav-link">Contract</a></li>
+            <li class="nav-item"><a href="/employee" class="nav-link">Employee</a></li>
+        </ul>
+    </div>
+</nav>
+<!-- END nav -->
+
+<footer th:fragment="footer">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-12 text-center">
+            <p>
+                Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                Furama Resort | Source code is
+                <i class="icon-heart color-danger" aria-hidden="true"></i>
+                <a href="https://github.com/manhdung98na" target="_blank">here</a>
+            </p>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-12 text-center">
+            <a href="?lang=en">EN</a>&nbsp;|&nbsp;
+            <a href="?lang=vi">VI</a>
+        </div>
+    </div>
+    <script src="/assert/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/assert/jquery/popper.min.js"></script>
+    <script src="/assert/bootstrap5/js/bootstrap.min.js"></script>
+</footer>
+</body>
+</html>
