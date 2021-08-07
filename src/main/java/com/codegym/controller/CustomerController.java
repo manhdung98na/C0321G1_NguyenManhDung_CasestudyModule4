@@ -11,8 +11,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -27,8 +25,8 @@ public class CustomerController {
     @Autowired
     private CustomerTypeService customerTypeService;
 
-    @GetMapping
-    public ModelAndView showList(@PageableDefault(value = 3) Pageable pageable) {
+    @GetMapping("")
+    public ModelAndView showList(@PageableDefault(value = 4) Pageable pageable) {
         Page<Customer> list = customerService.findAll(pageable);
         return new ModelAndView("customer/list", "listCustomer", list);
     }
@@ -42,32 +40,52 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public String create(@Validated @ModelAttribute("customer") CustomerDTO customerDTO, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
-        new CustomerDTO().validate(customerDTO, bindingResult);
-        if (!bindingResult.hasFieldErrors()) {
-            Customer customer = new Customer();
-            BeanUtils.copyProperties(customerDTO, customer);
-            customer.setDeleted(false);
-            customerService.save(customer);
+    public String create(@ModelAttribute("customer") CustomerDTO customerDTO, RedirectAttributes redirectAttributes) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+        customer.setDeleted(false);
+        if (customerService.save(customer) != null) {
             redirectAttributes.addFlashAttribute("status", "Success!");
-            return "redirect:/customer";
+            redirectAttributes.addFlashAttribute("statusContent", "Success to create customer " + customer.getCustomerId());
         } else {
-            model.addAttribute("customerType", customerTypeService.findAll());
-            return "customer/create";
+            redirectAttributes.addFlashAttribute("status", "Fail!");
+            redirectAttributes.addFlashAttribute("statusContent", "Failure to create customer " + customer.getCustomerId());
         }
+        return "redirect:/customer";
     }
 
     @GetMapping("/view/{id}")
-    public ModelAndView showView(@PathVariable String id){
+    public ModelAndView showView(@PathVariable String id) {
         CustomerDTO customerDTO = new CustomerDTO();
         Optional<Customer> customer = customerService.findById(id);
-        if (!customer.isPresent()){
+        if (!customer.isPresent()) {
             return new ModelAndView("error");
         }
         ModelAndView modelAndView = new ModelAndView("customer/view");
-                BeanUtils.copyProperties(customer.get(),customerDTO);
+        BeanUtils.copyProperties(customer.get(), customerDTO);
         modelAndView.addObject("customerType", customerTypeService.findAll());
         modelAndView.addObject("customer", customerDTO);
         return modelAndView;
+    }
+
+    @PostMapping("/edit")
+    public String edit(@ModelAttribute("customer") CustomerDTO customerDTO, RedirectAttributes redirectAttributes) {
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+        if (customerService.save(customer) != null) {
+            redirectAttributes.addFlashAttribute("status", "Success!");
+            redirectAttributes.addFlashAttribute("statusContent", "Success to update " + customer.getCustomerId());
+        } else {
+            redirectAttributes.addFlashAttribute("status", "Fail!");
+            redirectAttributes.addFlashAttribute("statusContent", "Failure to update " + customer.getCustomerId());
+        }
+        return "redirect:/customer";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("input-search") String search, @PageableDefault(value = 4) Pageable pageable, Model model) {
+        Page<Customer> list = customerService.search(search, pageable);
+        model.addAttribute("listCustomer", list);
+        return "customer/search";
     }
 }

@@ -10,23 +10,7 @@
             <h1>CUSTOMER</h1>
         </div>
     </div>
-    <div class="row">
-        <div class="col-6">
-            <button class="btn btn-primary m-2">
-                <a href="/customer/create" class="text-decoration-none text-white">Create</a>
-            </button>
-        </div>
-        <div class="col-6">
-            <form action="/customer/search" method="get" class="w-100">
-                <div class="input-group" style="float: right; width: 50%">
-                    <input type="text" class="form-control mt-2 mb-2 ms-2" placeholder="Search here" id="input-search"
-                           name="input-search">
-                    <button class="btn btn-outline-secondary mt-2 mb-2 me-2" type="submit" id="button-addon2">Button
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+
     <div class="row" id="table-list-customer">
         <div class="col-12">
             <table class="table table-hover" id="table-customer">
@@ -110,18 +94,6 @@
                 </ul>
             </nav>
             <!--Hết phân trang-->
-
-            <!--Toast-->
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" th:if="${status}"
-                 style="position: fixed; bottom: 15px; right: 15px; z-index: 1; min-width: 250px; width: auto">
-                <div class="toast-header bg-success">
-                    <strong class="me-auto text-white" th:text="${status}"></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    <span class="text-danger" th:text="${statusContent}"></span>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -130,9 +102,6 @@
 </body>
 <script>
     $(document).ready(function () {
-        $('.toast').toast('show');
-        // $('.toast').fadeOut(3000);
-
         $('#btn-confirm-yes').click(function () {
             let id = $('#confirm-id-output').val();
             $.ajax({

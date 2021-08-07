@@ -15,13 +15,14 @@
                     <div class="form-group col-md-6">
                         <label for="customer-id" class="form-label mt-2">ID</label>
                         <input type="text" class="form-control" id="customer-id" th:field="*{customerId}" required>
-                        <small th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}">ID Error</small>
+                        <input id="error-id" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="customer-name" class="form-label mt-2">Name</label>
                         <input type="text" class="form-control" id="customer-name" th:field="*{customerName}" required>
-                        <small th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}">Name
-                            Error</small>
+                        <input id="error-name" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
                     </div>
                 </div>
                 <div class="row">
@@ -44,42 +45,45 @@
                         <label for="customer-birthday" class="mt-2">Birthday</label>
                         <input type="date" class="form-control" id="customer-birthday"
                                th:field="*{customerBirthday}" required>
-                        <small th:if="${#fields.hasErrors('customerBirthday')}" th:errors="*{customerBirthday}">Birthday
-                            Error</small>
+                        <input id="error-birthday"
+                               class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6">
-                        <label for="customer-phone" class="mt-2">Phone</label>
-                        <input type="text" class="form-control" id="customer-phone"
-                               th:field="*{customerPhone}" required>
-                        <small th:if="${#fields.hasErrors('customerPhone')}" th:errors="*{customerPhone}">Phone
-                            Error</small>
-                    </div>
-                    <div class="form-group col-md-6">
                         <label for="customer-id-card" class="mt-2">ID Card</label>
                         <input type="text" class="form-control" id="customer-id-card"
                                th:field="*{customerIdCard}" required>
-                        <small th:if="${#fields.hasErrors('customerIdCard')}" th:errors="*{customerIdCard}">ID Card
-                            Error</small>
+                        <input id="error-id-card"
+                               class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="customer-phone" class="mt-2">Phone</label>
+                        <input type="text" class="form-control" id="customer-phone"
+                               th:field="*{customerPhone}" required>
+                        <input id="error-phone" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="customer-email" class="mt-2">Email</label>
                     <input type="text" class="form-control" id="customer-email" th:field="*{customerEmail}" required>
-                    <small th:if="${#fields.hasErrors('customerEmail')}" th:errors="*{customerEmail}">Email
-                        Error</small>
+                    <input id="error-email" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                           style="font-size: smaller" value="" hidden disabled>
                 </div>
                 <div class="form-group">
                     <label for="customer-address" class="mt-2">Address</label>
                     <input type="text" class="form-control" id="customer-address"
                            th:field="*{customerAddress}" required>
                 </div>
+                <!--button-->
                 <div class="d-flex justify-content-center mt-3">
                     <button type="button" class="btn btn-dark m-1">
                         <a href="/customer" class="text-decoration-none text-white">Back</a>
                     </button>
-                    <button type="submit" class="btn btn-primary m-1">Create</button>
+                    <button type="submit" class="btn btn-primary m-1" id="btn-create">Create</button>
                 </div>
             </form>
         </div>
@@ -87,4 +91,139 @@
 </div>
 <footer th:replace="/layout::footer"></footer>
 </body>
+<script>
+    $(document).ready(function () {
+        $('#customer-id').change(function () {
+            let id = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/id/" + id,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-id').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#customer-name').change(function () {
+            let name = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/name/" + name,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-name').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#customer-birthday').change(function () {
+            let birthday = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/birthday/" + birthday,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-birthday').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#customer-id-card').change(function () {
+            let idCard = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/idcard/" + idCard,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-id-card').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#customer-phone').change(function () {
+            let phone = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/phone/" + phone,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-phone').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#customer-email').change(function () {
+            let email = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/customer/check/email/" + email,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-email').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === ""
+                        && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === ""){
+                        $('#btn-create').attr("disabled", false);
+                    }else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+    })
+</script>
 </html>
