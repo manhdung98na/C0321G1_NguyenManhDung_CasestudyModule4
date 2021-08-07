@@ -86,6 +86,7 @@ public class CustomerController {
     public String search(@RequestParam("input-search") String search, @PageableDefault(value = 4) Pageable pageable, Model model) {
         Page<Customer> list = customerService.search(search, pageable);
         model.addAttribute("listCustomer", list);
+        model.addAttribute("searchContent", search);
         return "customer/search";
     }
 }

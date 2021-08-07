@@ -44,39 +44,41 @@
             </table>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Confirm to delete
-                            <output value="" id="confirm-id-output" class="text-danger"></output>
-                            ?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-danger" id="btn-confirm-yes"
-                                    data-bs-dismiss="modal">Yes
-                            </button>
-                        </div>
-                    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Confirm to delete
+                    <output value="" id="confirm-id-output" class="text-danger"></output>
+                    ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes"
+                            data-bs-dismiss="modal">Yes
+                    </button>
                 </div>
             </div>
-            <!--Hết model-->
+        </div>
+    </div>
+    <!--Hết model-->
 
+    <div class="row">
+        <div class="col-12">
             <!--Phân trang-->
             <nav aria-label="Pagination" class="d-flex justify-content-center">
                 <ul class="pagination">
                     <li class="page-item" th:if="${listCustomer.hasPrevious()}">
-                        <a class="page-link" th:href="@{/customer(page=${listCustomer.number - 1})}"
+                        <a class="page-link"
+                           th:href="@{/customer/search(input-search=${searchContent},page=${listCustomer.number - 1})}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -86,7 +88,8 @@
                               th:text="${listCustomer.number + 1} + '/'  + ${listCustomer.totalPages}"></span>
                     </li>
                     <li class="page-item" th:if="${listCustomer.hasNext()}">
-                        <a class="page-link" th:href="@{/customer(page=${listCustomer.number + 1})}"
+                        <a class="page-link"
+                           th:href="@{/customer/search(input-search=${searchContent},page=${listCustomer.number + 1})}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
@@ -95,6 +98,9 @@
             </nav>
             <!--Hết phân trang-->
         </div>
+        <button class="btn btn-secondary d-flex position-absolute w-auto" style="left: 16px">
+            <a href="/customer/" class="text-white text-center text-decoration-none">Back</a>
+        </button>
     </div>
 </div>
 <footer th:replace="/layout::footer">

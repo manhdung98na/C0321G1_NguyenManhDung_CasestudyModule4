@@ -1,7 +1,7 @@
 package com.codegym.model.service.customer;
 
 import com.codegym.model.entity.about_customer.Customer;
-import com.codegym.model.repository.CustomerRepository;
+import com.codegym.model.repository.customer.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
