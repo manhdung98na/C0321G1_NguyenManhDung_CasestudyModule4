@@ -17,7 +17,7 @@ import java.util.Set;
 public class ServiceType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int serviceTypeId;
+    public Integer serviceTypeId;
 
     private String serviceTypeName;
 

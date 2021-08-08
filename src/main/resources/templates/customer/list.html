@@ -63,7 +63,8 @@
                 </tbody>
             </table>
             <!--Multiple delete-->
-            <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete">
+            <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Multi Delete
             </button>
         </div>
@@ -96,24 +97,20 @@
     <!--Hết phân trang-->
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+         data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Confirm to delete
-                    <output value="" id="confirm-id-output" class="text-danger"></output>
-                    ?
+                    Are you sure to delete customer(s)?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-danger" id="btn-confirm-yes"
-                            data-bs-dismiss="modal">Yes
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes" data-bs-dismiss="modal">Yes
                     </button>
                 </div>
             </div>
@@ -137,39 +134,18 @@
 </footer>
 </body>
 <script>
+    let idArray = [];
     $(document).ready(function () {
         $('.toast').toast('show');
         // $('.toast').fadeOut(3000);
 
         $('#btn-confirm-yes').click(function () {
-            let id = $('#confirm-id-output').val();
-            $.ajax({
-                url: "http://localhost:8080/api/v1/customer/delete/" + id,
-                type: "DELETE",
-                //xử lý khi thành công
-                success: function () {
-                    let idButton = "#btn-" + id;
-                    $(idButton).parent().parent().remove();
-                },
-                error: function () {
-                    console.log("Lỗi")
-                }
-            });
-        });
-
-        $('#btn-multi-delete').click(function () {
-            let arr = [];
-            $('#table-customer input[type=checkbox]').each(function () {
-                if (jQuery(this).is(":checked")) {
-                    arr.push($(this).val());
-                }
-            });
-            if (arr.length != 0) {
+            if (idArray.length !== 0) {
                 $.ajax({
                     url: "http://localhost:8080/api/v1/customer/multi-delete",
                     type: "DELETE",
                     data: JSON.stringify({
-                        data: arr
+                        data: idArray
                     }),
                     headers: {
                         "Accept": "application/json",
@@ -177,22 +153,36 @@
                     },
                     //xử lý khi thành công
                     success: function () {
-                        for(i=0; i < arr.length; i++) {
-                            let id = arr[i];
+                        for (let i = 0; i < idArray.length; i++) {
+                            let id = idArray[i];
                             let idButton = "#btn-" + id;
                             $(idButton).parent().parent().remove();
                         }
+                        idArray.splice(0, idArray.length);
+                        console.log(idArray.length);
                     },
                     error: function () {
-                        console.log("Lỗi")
+                        console.log("Lỗi");
                     }
                 });
             }
         });
+
+        $('#btn-confirm-no').click(function () {
+            idArray.splice(0, idArray.length);
+        });
+
+        $('#btn-multi-delete').click(function () {
+            $('#table-customer input[type=checkbox]').each(function () {
+                if (jQuery(this).is(":checked")) {
+                    idArray.push($(this).val());
+                }
+            });
+        });
     });
 
     function getIdToDelete(id) {
-        $('#confirm-id-output').val(id);
+        idArray.push(id);
     }
 </script>
 </html>

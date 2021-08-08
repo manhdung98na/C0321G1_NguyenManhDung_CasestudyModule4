@@ -1,18 +1,10 @@
 package com.codegym.dto;
 
 import com.codegym.model.entity.about_customer.CustomerType;
-import com.codegym.model.service.customer.CustomerService;
-import com.codegym.model.service.customer.CustomerServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
-
-import java.time.LocalDate;
-import java.util.regex.Pattern;
 
 @Setter
 @Getter
