@@ -37,6 +37,7 @@
                 <th>Gender</th>
                 <th>Id card</th>
                 <th>Action</th>
+                <th></th>
                 </thead>
                 <tbody>
                 <tr th:each="customer : ${listCustomer}">
@@ -55,40 +56,21 @@
                                 th:value="${customer.customerId}" onclick="getIdToDelete(this.value)">Delete
                         </button>
                     </td>
+                    <td>
+                        <input type="checkbox" th:value="${customer.customerId}">
+                    </td>
                 </tr>
                 </tbody>
             </table>
+            <!--Multiple delete-->
+            <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete">
+                Multi Delete
+            </button>
         </div>
     </div>
+    <!--Phân trang-->
     <div class="row">
         <div class="col-12">
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Confirm to delete
-                            <output value="" id="confirm-id-output" class="text-danger"></output>
-                            ?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                            <button type="button" class="btn btn-danger" id="btn-confirm-yes"
-                                    data-bs-dismiss="modal">Yes
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--Hết model-->
-
-            <!--Phân trang-->
             <nav aria-label="Pagination" class="d-flex justify-content-center">
                 <ul class="pagination">
                     <li class="page-item" th:if="${listCustomer.hasPrevious()}">
@@ -109,19 +91,45 @@
                     </li>
                 </ul>
             </nav>
-            <!--Hết phân trang-->
+        </div>
+    </div>
+    <!--Hết phân trang-->
 
-            <!--Toast-->
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" th:if="${status}"
-                 style="position: fixed; bottom: 15px; right: 15px; z-index: 1; min-width: 250px; width: auto">
-                <div class="toast-header bg-success">
-                    <strong class="me-auto text-white" th:text="${status}"></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
-                <div class="toast-body">
-                    <span class="text-danger" th:text="${statusContent}"></span>
+                <div class="modal-body">
+                    Confirm to delete
+                    <output value="" id="confirm-id-output" class="text-danger"></output>
+                    ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes"
+                            data-bs-dismiss="modal">Yes
+                    </button>
                 </div>
             </div>
+        </div>
+    </div>
+    <!--Hết model-->
+
+    <!--Toast-->
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" th:if="${status}"
+         style="position: fixed; bottom: 15px; right: 15px; z-index: 1; min-width: 250px; width: auto">
+        <div class="toast-header bg-success">
+            <strong class="me-auto text-white" th:text="${status}"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <span class="text-danger" th:text="${statusContent}"></span>
         </div>
     </div>
 </div>
@@ -147,6 +155,39 @@
                     console.log("Lỗi")
                 }
             });
+        });
+
+        $('#btn-multi-delete').click(function () {
+            let arr = [];
+            $('#table-customer input[type=checkbox]').each(function () {
+                if (jQuery(this).is(":checked")) {
+                    arr.push($(this).val());
+                }
+            });
+            if (arr.length != 0) {
+                $.ajax({
+                    url: "http://localhost:8080/api/v1/customer/multi-delete",
+                    type: "DELETE",
+                    data: JSON.stringify({
+                        data: arr
+                    }),
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    //xử lý khi thành công
+                    success: function () {
+                        for(i=0; i < arr.length; i++) {
+                            let id = arr[i];
+                            let idButton = "#btn-" + id;
+                            $(idButton).parent().parent().remove();
+                        }
+                    },
+                    error: function () {
+                        console.log("Lỗi")
+                    }
+                });
+            }
         });
     });
 

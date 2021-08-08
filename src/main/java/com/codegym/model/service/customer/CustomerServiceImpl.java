@@ -165,7 +165,9 @@ class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(String id) {
-        customerRepository.deleteById(id);
+        Customer customer = customerRepository.getById(id);
+        customer.setDeleted(true);
+        customerRepository.save(customer);
     }
 
     @Override

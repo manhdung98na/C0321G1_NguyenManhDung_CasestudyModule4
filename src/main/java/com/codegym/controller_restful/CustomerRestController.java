@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/api/v1/customer")
@@ -29,9 +31,22 @@ public class CustomerRestController {
         if (!customer.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        Customer customerDeleted = customer.get();
-        customerDeleted.setDeleted(true);
-        customerService.save(customerDeleted);
+        customerService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/multi-delete")
+    public ResponseEntity<Void> deleteMulti(@RequestBody String data) {
+        String idStringConCat = "";
+        Pattern p = Pattern.compile(":\\[(.*?)]}");
+        Matcher m = p.matcher(data);
+        while (m.find()) {
+            idStringConCat = m.group(1);
+        }
+        String[] idArray = idStringConCat.replace("\"", "").split(",");
+        for (String id : idArray) {
+            customerService.delete(id);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
