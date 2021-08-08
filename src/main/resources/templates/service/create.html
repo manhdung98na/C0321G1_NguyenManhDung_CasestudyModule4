@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid">
+    <div class="row text-center mt-5">
+        <h3>CREATE NEW SERVICE</h3>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <form action="/service/create" method="post" th:object="${service}" class="w-50 mt-3">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="service-id" class="form-label mt-2">ID</label>
+                        <input type="text" class="form-control" id="service-id" th:field="*{serviceId}" required>
+                        <input id="error-id" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="service-name" class="form-label mt-2">Name</label>
+                        <input type="text" class="form-control" id="service-name" th:field="*{serviceName}" required>
+                        <input id="error-name" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="service-area" class="mt-2">Area</label>
+                        <div class="input-group mb-3">
+                            <input type="number" min="1" id="service-area" class="form-control"
+                                   aria-describedby="basic-addon2" required th:field="*{serviceArea}">
+                            <span class="input-group-text"><span>m</span><sup>2</sup></span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="service-cost" class="mt-2">Cost</label>
+                        <div class="input-group mb-3">
+                            <input type="number" min="0" id="service-cost" class="form-control"
+                                   aria-describedby="basic-addon2" required th:field="*{serviceCost}">
+                            <span class="input-group-text">VND</span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="service-max-people" class="mt-2">Max people</label>
+                        <input type="number" min="1" class="form-control" id="service-max-people"
+                               th:field="*{serviceMaxPeople}"
+                               required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="service-pool-area" class="mt-2">Pool area</label>
+                        <div class="input-group mb-3">
+                            <input type="number" min="0" id="service-pool-area" class="form-control"
+                                   aria-describedby="basic-addon2" required th:field="*{poolArea}">
+                            <span class="input-group-text"><span>m</span><sup>2</sup></span></span>
+                        </div>
+                        <input id="error-pool" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="service-rent-type" class="mt-2">Rent type</label>
+                        <select class="form-select" id="service-rent-type" th:field="*{rentType}" required>
+                            <option th:each="type : ${rentType}" th:value="${type.rentTypeId}"
+                                    th:text="${type.rentTypeName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label for="service-type" class="mt-2">Service type</label>
+                        <select class="form-select" id="service-type" th:field="*{serviceType}" required>
+                            <option th:each="type : ${serviceType}" th:value="${type.serviceTypeId}"
+                                    th:text="${type.serviceTypeName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="service-floors" class="mt-2">Floors</label>
+                        <input type="number" min="1" class="form-control" id="service-floors"
+                               th:field="*{numberOfFloors}"
+                               required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="service-standard-room" class="form-label mt-2">Standard room</label>
+                        <input type="text" class="form-control" id="service-standard-room" th:field="*{standardRoom}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="service-description" class="form-label mt-2">Desciption other convenience</label>
+                        <input type="text" class="form-control" id="service-description"
+                               th:field="*{descriptionOtherConvenience}">
+                    </div>
+                </div>
+                <!--button-->
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-dark m-1">
+                        <a href="/service" class="text-decoration-none text-white">Back</a>
+                    </button>
+                    <button type="submit" class="btn btn-primary m-1" id="btn-create">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer"></footer>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#service-id').change(function () {
+            let id = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/service/check/id/" + id,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-id').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === "" && $('#error-pool').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#service-name').change(function () {
+            let name = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/service/check/name/" + name,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-name').val(response);
+                    if ($('#error-id').val() === "" && $('#error-name').val() === "" && $('#error-pool').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#service-pool-area').change(function () {
+            let poolArea = Number($('#service-pool-area').val());
+            let serviceArea = Number($('#service-area').val());
+            if (poolArea > serviceArea) {
+                $('#error-pool').val("Must be smaller than service area");
+                $('#error-pool').attr("hidden", false);
+            } else {
+                $('#error-pool').val("");
+            }
+            if ($('#error-id').val() === "" && $('#error-name').val() === "" && $('#error-pool').val() === "") {
+                $('#btn-create').attr("disabled", false);
+            } else {
+                $('#btn-create').attr("disabled", true);
+            }
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid m-0 p-0">
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <h1>SERVICE</h1>
+        </div>
+    </div>
+    <!--create and search-->
+    <div class="row">
+        <div class="col-6">
+            <button class="btn btn-primary m-2">
+                <a href="/service/create" class="text-decoration-none text-white">Create</a>
+            </button>
+        </div>
+        <div class="col-6">
+            <form action="/service/search" method="get" class="w-100">
+                <div class="input-group" style="float: right; width: 50%">
+                    <input type="text" class="form-control mt-2 mb-2 ms-2" placeholder="Search here" id="input-search"
+                           name="input-search">
+                    <button class="btn btn-outline-secondary mt-2 mb-2 me-2" type="submit" id="button-addon2">Button
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--service list-->
+    <div class="row" id="table-list-service">
+        <div class="col-12">
+            <table class="table table-hover" id="table-service">
+                <thead class="table-dark">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Rent type</th>
+                <th>Service type</th>
+                <th>Area</th>
+                <th>Floors</th>
+                <th>Action</th>
+                <th></th>
+                </thead>
+                <tbody>
+                <tr th:each="service : ${listService}">
+                    <td>
+                        <a th:href="@{/service/view/__${service.serviceId}__}" th:text="${service.serviceId}"
+                           class="text-dark"></a>
+                    </td>
+                    <td th:text="${service.serviceName}"></td>
+                    <td th:text="${service.rentType.rentTypeName}"></td>
+                    <td th:text="${service.serviceType.serviceTypeName}"></td>
+
+                    <td th:text="${service.serviceArea}"></td>
+                    <td th:text="${service.numberOfFloors}"></td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" th:id="${'btn-' + service.serviceId}"
+                                th:value="${service.serviceId}" onclick="getIdToDelete(this.value)">Delete
+                        </button>
+                    </td>
+                    <td>
+                        <input type="checkbox" th:value="${service.serviceId}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--Multiple delete-->
+            <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete"
+                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Multi Delete
+            </button>
+        </div>
+    </div>
+
+    <!--Phân trang-->
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Pagination" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item" th:if="${listService.hasPrevious()}">
+                        <a class="page-link" th:href="@{/service(page=${listService.number - 1})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <span class="page-link"
+                              th:text="${listService.number + 1} + '/'  + ${listService.totalPages}"></span>
+                    </li>
+                    <li class="page-item" th:if="${listService.hasNext()}">
+                        <a class="page-link" th:href="@{/service(page=${listService.number + 1})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--Hết phân trang-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+         data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete service(s)?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes" data-bs-dismiss="modal">Yes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Hết model-->
+
+    <!--Toast-->
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" th:if="${status}"
+         style="position: fixed; bottom: 15px; right: 15px; z-index: 1; min-width: 250px; width: auto">
+        <div class="toast-header bg-success">
+            <strong class="me-auto text-white" th:text="${status}"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <span class="text-danger" th:text="${statusContent}"></span>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer">
+</footer>
+</body>
+<script>
+    let idArray = [];
+    $(document).ready(function () {
+        $('.toast').toast('show');
+        // $('.toast').fadeOut(3000);
+
+        $('#btn-confirm-yes').click(function () {
+            if (idArray.length !== 0) {
+                $.ajax({
+                    url: "http://localhost:8080/api/v1/service/multi-delete",
+                    type: "DELETE",
+                    data: JSON.stringify({
+                        data: idArray
+                    }),
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    //xử lý khi thành công
+                    success: function () {
+                        for (let i = 0; i < idArray.length; i++) {
+                            let id = idArray[i];
+                            let idButton = "#btn-" + id;
+                            $(idButton).parent().parent().remove();
+                        }
+                        idArray.splice(0, idArray.length);
+                        console.log(idArray.length);
+                    },
+                    error: function () {
+                        console.log("Lỗi");
+                    }
+                });
+            }
+        });
+
+        $('#btn-confirm-no').click(function () {
+            idArray.splice(0, idArray.length);
+        });
+
+        $('#btn-multi-delete').click(function () {
+            $('#table-service input[type=checkbox]').each(function () {
+                if (jQuery(this).is(":checked")) {
+                    idArray.push($(this).val());
+                }
+            });
+        });
+    });
+
+    function getIdToDelete(id) {
+        idArray.push(id);
+    }
+</script>
+</html>

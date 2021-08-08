@@ -7,36 +7,38 @@
 <div class="container-fluid m-0 p-0">
     <div class="row mt-3">
         <div class="col-12 text-center">
-            <h1>CUSTOMER</h1>
+            <h1>SERVICE</h1>
         </div>
     </div>
 
-    <div class="row" id="table-list-customer">
+    <div class="row" id="table-list-service">
         <div class="col-12">
-            <table class="table table-hover" id="table-customer">
+            <table class="table table-hover" id="table-service">
                 <thead class="table-dark">
                 <th>ID</th>
                 <th>Name</th>
-                <th>Type</th>
-                <th>Gender</th>
-                <th>Id card</th>
+                <th>Rent type</th>
+                <th>Service type</th>
+                <th>Area</th>
+                <th>Floors</th>
                 <th>Action</th>
                 </thead>
                 <tbody>
-                <tr th:each="customer : ${listCustomer}">
+                <tr th:each="service : ${listService}">
                     <td>
-                        <a th:href="@{/customer/view/__${customer.customerId}__}" th:text="${customer.customerId}"
+                        <a th:href="@{/service/view/__${service.serviceId}__}" th:text="${service.serviceId}"
                            class="text-dark"></a>
                     </td>
-                    <td th:text="${customer.customerName}"></td>
-                    <td th:text="${customer.customerType.customerTypeName}"></td>
-                    <td th:text="${customer.customerGender} == 1 ? 'Male' :
-                                    (${customer.customerGender} == 0 ? 'Female' : 'Other')"></td>
-                    <td th:text="${customer.customerIdCard}"></td>
+                    <td th:text="${service.serviceName}"></td>
+                    <td th:text="${service.rentType.rentTypeName}"></td>
+                    <td th:text="${service.serviceType.serviceTypeName}"></td>
+
+                    <td th:text="${service.serviceArea}"></td>
+                    <td th:text="${service.numberOfFloors}"></td>
                     <td>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal" th:id="${'btn-' + customer.customerId}"
-                                th:value="${customer.customerId}" onclick="getIdToDelete(this.value)">Delete
+                                data-bs-target="#exampleModal" th:id="${'btn-' + service.serviceId}"
+                                th:value="${service.serviceId}" onclick="getIdToDelete(this.value)">Delete
                         </button>
                     </td>
                 </tr>
@@ -46,24 +48,20 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+         data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Confirm to delete
-                    <output value="" id="confirm-id-output" class="text-danger"></output>
-                    ?
+                    Are you sure to delete service(s)?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No</button>
-                    <button type="button" class="btn btn-danger" id="btn-confirm-yes"
-                            data-bs-dismiss="modal">Yes
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes" data-bs-dismiss="modal">Yes
                     </button>
                 </div>
             </div>
@@ -71,35 +69,34 @@
     </div>
     <!--Hết model-->
 
+    <!--Phân trang-->
     <div class="row">
         <div class="col-12">
-            <!--Phân trang-->
             <nav aria-label="Pagination" class="d-flex justify-content-center">
                 <ul class="pagination">
-                    <li class="page-item" th:if="${listCustomer.hasPrevious()}">
+                    <li class="page-item" th:if="${listService.hasPrevious()}">
                         <a class="page-link"
-                           th:href="@{/customer/search(input-search=${searchContent},page=${listCustomer.number - 1})}"
+                           th:href="@{/service/search(input-search=${searchContent},page=${listService.number - 1})}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
                         <span class="page-link"
-                              th:text="${listCustomer.number + 1} + '/'  + ${listCustomer.totalPages}"></span>
+                              th:text="${listService.number + 1} + '/'  + ${listService.totalPages}"></span>
                     </li>
-                    <li class="page-item" th:if="${listCustomer.hasNext()}">
+                    <li class="page-item" th:if="${listService.hasNext()}">
                         <a class="page-link"
-                           th:href="@{/customer/search(input-search=${searchContent},page=${listCustomer.number + 1})}"
+                           th:href="@{/service/search(input-search=${searchContent},page=${listService.number + 1})}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
-            <!--Hết phân trang-->
         </div>
         <button class="btn btn-secondary d-flex position-absolute w-auto" style="left: 16px">
-            <a href="/customer/" class="text-white text-center text-decoration-none">Back</a>
+            <a href="/service/" class="text-white text-center text-decoration-none">Back</a>
         </button>
     </div>
 </div>
@@ -112,7 +109,7 @@
         $('#btn-confirm-yes').click(function () {
             if (idArray.length !== 0) {
                 $.ajax({
-                    url: "http://localhost:8080/api/v1/customer/multi-delete",
+                    url: "http://localhost:8080/api/v1/service/multi-delete",
                     type: "DELETE",
                     data: JSON.stringify({
                         data: idArray
@@ -143,7 +140,7 @@
         });
 
         $('#btn-multi-delete').click(function () {
-            $('#table-customer input[type=checkbox]').each(function () {
+            $('#table-service input[type=checkbox]').each(function () {
                 if (jQuery(this).is(":checked")) {
                     idArray.push($(this).val());
                 }
