@@ -1,6 +1,5 @@
 package com.codegym.model.entity.about_service;
 
-import com.codegym.model.entity.about_service.Service;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

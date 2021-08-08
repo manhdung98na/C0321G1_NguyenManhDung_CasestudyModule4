@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class Service {
     @Id
     private String serviceId;
-    
+
     private String serviceName;
 
     private Integer serviceArea;

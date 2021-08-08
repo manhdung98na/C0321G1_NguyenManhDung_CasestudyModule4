@@ -1,6 +1,5 @@
 package com.codegym.dto;
 
-import com.codegym.model.entity.about_contract.Contract;
 import com.codegym.model.entity.about_employee.Division;
 import com.codegym.model.entity.about_employee.EducationDegree;
 import com.codegym.model.entity.about_employee.Position;

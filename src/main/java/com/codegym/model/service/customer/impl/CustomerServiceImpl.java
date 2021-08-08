@@ -91,9 +91,9 @@ class CustomerServiceImpl implements CustomerService {
             return "Invalid ID Card! Format: (9 or 12 digital characters)";
         }
         List<Customer> list = customerRepository.findAll();
-        for (Customer obj: list){
-            if (!obj.getCustomerId().equals(id)){
-                if (idCard.equals(obj.getCustomerIdCard())){
+        for (Customer obj : list) {
+            if (!obj.getCustomerId().equals(id)) {
+                if (idCard.equals(obj.getCustomerIdCard())) {
                     return "Duplicated ID Card!";
                 }
             }
@@ -120,9 +120,9 @@ class CustomerServiceImpl implements CustomerService {
             return "Invalid phone number! Format: 090xxxxxxx | 091xxxxxxx | (84)+90xxxxxxx | (84)+91xxxxxxx";
         }
         List<Customer> list = customerRepository.findAll();
-        for (Customer obj: list){
-            if (!obj.getCustomerId().equals(id)){
-                if (phone.equals(obj.getCustomerPhone())){
+        for (Customer obj : list) {
+            if (!obj.getCustomerId().equals(id)) {
+                if (phone.equals(obj.getCustomerPhone())) {
                     return "Duplicated Phone number!";
                 }
             }
@@ -149,9 +149,9 @@ class CustomerServiceImpl implements CustomerService {
             return "Invalid email! Format: abc@xyz.zyt";
         }
         List<Customer> list = customerRepository.findAll();
-        for (Customer obj: list){
-            if (!obj.getCustomerId().equals(id)){
-                if (email.equals(obj.getCustomerEmail())){
+        for (Customer obj : list) {
+            if (!obj.getCustomerId().equals(id)) {
+                if (email.equals(obj.getCustomerEmail())) {
                     return "Duplicated Email!";
                 }
             }
