@@ -25,16 +25,6 @@ public class CustomerRestController {
         return new ResponseEntity<>(customerService.findAll(pageable), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String id) {
-        Optional<Customer> customer = customerService.findById(id);
-        if (!customer.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        customerService.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
     @DeleteMapping("/multi-delete")
     public ResponseEntity<Void> deleteMulti(@RequestBody String data) {
         String idStringConCat = "";
