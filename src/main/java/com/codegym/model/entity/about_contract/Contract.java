@@ -44,7 +44,7 @@ public class Contract {
     @JoinColumn(name = "service_id", referencedColumnName = "serviceId")
     private Service service;
 
-    private boolean isAvailable;
+    private boolean isDeleted;
 
     @OneToMany(mappedBy = "contract")
     private Set<ContractDetail> contractDetail;

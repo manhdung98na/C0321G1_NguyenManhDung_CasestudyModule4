@@ -26,4 +26,6 @@ public class ContractDetail {
     private AttachService attachService;
 
     private Integer quantity;
+
+    private boolean isDeleted;
 }

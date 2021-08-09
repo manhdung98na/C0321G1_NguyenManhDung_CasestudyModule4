@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid">
+    <div class="row text-center mt-5">
+        <h3>CREATE NEW CONTRACT DETAIL</h3>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <form action="/contract-detail/create" method="post" th:object="${contractDetail}" class="w-50 mt-3">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="contract-detail-contract" class="mt-2">Contract ID</label>
+                        <select class="form-select" id="contract-detail-contract" th:field="*{contract}">
+                            <option th:each="contractt : ${listContract}" th:value="${contractt.contractId}"
+                                    th:text="${contractt.contractId}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="contract-detail-attach-service" class="mt-2">Attach services</label>
+                        <select class="form-select" id="contract-detail-attach-service" th:field="*{attachService}">
+                            <option th:each="service : ${listAttachService}" th:value="${service.attachServiceId}"
+                                    th:text="${service.attachServiceName} + ' - ' + ${service.attachServiceUnit} + ' unit(s)'"></option>
+                            <!--                                    th:selected="${contractDetail.attachService.attachServiceId} == ${service.attachServiceId}"-->
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="contract-detail-quantity" class="mt-2">Quantity</label>
+                        <input class="form-control bg-white" id="contract-detail-quantity" type="number" min="1"
+                               th:field="*{quantity}" required>
+                        <input class="form-text text-danger border-0 bg-white d-block w-100" disabled
+                               id="error-quantity" style="font-size: smaller" th:value="${errorQuantity}">
+                    </div>
+                </div>
+
+                <!--button-->
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-dark m-1">
+                        <a href="/contract-detail" class="text-decoration-none text-white">Back</a>
+                    </button>
+                    <button type="submit" class="btn btn-primary m-1" id="btn-create">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer"></footer>
+</body>
+<script>
+    $(document).ready(function () {
+
+    })
+</script>
+</html>

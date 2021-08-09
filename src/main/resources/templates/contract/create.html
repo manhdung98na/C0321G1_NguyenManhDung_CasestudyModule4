@@ -150,7 +150,7 @@
             })
         })
 
-        $('#contract-total-money').load(function () {
+        $(window).on('load',function () {
             $.ajax({
                 url: "http://localhost:8080/api/v1/contract/get-total-money/" + $('#contract-service').val(),
                 type: "GET",

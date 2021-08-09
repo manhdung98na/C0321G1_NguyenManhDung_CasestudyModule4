@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -22,6 +24,6 @@ public class ContractDTO {
     private Employee employee;
     private Customer customer;
     private Service service;
-    private boolean isAvailable;
-    private ContractDetail contractDetail;
+    private boolean isDelete;
+    private Set<ContractDetail> contractDetail;
 }

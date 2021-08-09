@@ -1,7 +1,6 @@
 package com.codegym.model.service.contract.impl;
 
 import com.codegym.model.entity.about_contract.Contract;
-import com.codegym.model.entity.about_customer.Customer;
 import com.codegym.model.repository.contract.ContractRepository;
 import com.codegym.model.service.contract.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +23,12 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Page<Contract> findAll(Pageable pageable) {
         return repository.findAllByDeletedIsFalse(pageable);
+    }
+
+
+    @Override
+    public List<Contract> findAll() {
+        return repository.findAllByDeletedIsFalse();
     }
 
     @Override
@@ -37,14 +43,14 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void delete(Integer id) {
-        Contract customer = repository.getById(id);
-        customer.setAvailable(true);
-        repository.save(customer);
+        Contract contract = repository.getById(id);
+        contract.setDeleted(true);
+        repository.save(contract);
     }
 
     @Override
     public Page<Contract> search(String search, Pageable pageable) {
-        return repository.search(search,pageable);
+        return repository.search(search, pageable);
     }
 
     @Override

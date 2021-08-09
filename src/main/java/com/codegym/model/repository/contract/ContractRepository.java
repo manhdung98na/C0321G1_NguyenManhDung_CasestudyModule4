@@ -14,11 +14,14 @@ import java.util.List;
 @Repository
 @Transactional
 public interface ContractRepository extends JpaRepository<Contract, Integer> {
-    @Query("select c from Contract c where c.isAvailable=false")
+    @Query("select c from Contract c where c.isDeleted=false")
     Page<Contract> findAllByDeletedIsFalse(Pageable pageable);
+
+    @Query("select c from Contract c where c.isDeleted=false")
+    List<Contract> findAllByDeletedIsFalse();
 
     @Query("select c from Contract c where (c.customer.customerName like CONCAT('%',:search,'%') or c.service.serviceName like CONCAT('%',:search,'%') or " +
             "c.employee.employeeName like CONCAT('%',:search,'%') or c.contractStartDate like CONCAT('%',:search,'%') or c.contractEndDate like CONCAT('%',:search,'%')) " +
-            "and c.isAvailable = false")
+            "and c.isDeleted = false")
     Page<Contract> search(@Param("search") String search, Pageable pageable);
 }
