@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid m-0 p-0">
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <h1>EMPLOYEE</h1>
+        </div>
+    </div>
+
+    <div class="row" id="table-list-contract">
+        <div class="col-12">
+            <table class="table table-hover" id="table-contract">
+                <thead class="table-dark">
+                <th>ID</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Total money</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Action</th>
+                </thead>
+                <tbody>
+                <tr th:each="contract : ${listContract}">
+                    <td>
+                        <a th:href="@{/contract/view/__${contract.contractId}__}" th:text="${contract.contractId}"
+                           class="text-dark"></a>
+                    </td>
+                    <td th:text="${contract.contractStartDate}"></td>
+                    <td th:text="${contract.contractEndDate}"></td>
+                    <td th:text="${contract.contractTotalMoney}"></td>
+                    <td th:text="${contract.customer.customerName}"></td>
+                    <td th:text="${contract.service.serviceName}"></td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#exampleModal" th:id="${'btn-' + contract.contractId}"
+                                th:value="${contract.contractId}" onclick="getIdToDelete(this.value)">Delete
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Confirm to delete
+                    <output value="" id="confirm-id-output" class="text-danger"></output>
+                    ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-yes"
+                            data-bs-dismiss="modal">Yes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Hết model-->
+
+    <!--Phân trang-->
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="Pagination" class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item" th:if="${listContract.hasPrevious()}">
+                        <a class="page-link"
+                           th:href="@{/contract/search(input-search=${searchContent},page=${listContract.number - 1})}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <span class="page-link"
+                              th:text="${listContract.number + 1} + '/'  + ${listContract.totalPages}"></span>
+                    </li>
+                    <li class="page-item" th:if="${listContract.hasNext()}">
+                        <a class="page-link"
+                           th:href="@{/contract/search(input-search=${searchContent},page=${listContract.number + 1})}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!--Hết phân trang-->
+        </div>
+        <button class="btn btn-secondary d-flex position-absolute w-auto" style="left: 16px">
+            <a href="/contract/" class="text-white text-center text-decoration-none">Back</a>
+        </button>
+    </div>
+</div>
+<footer th:replace="/layout::footer">
+</footer>
+</body>
+<script>
+    let idArray = [];
+    $(document).ready(function () {
+        $('#btn-confirm-yes').click(function () {
+            if (idArray.length !== 0) {
+                $.ajax({
+                    url: "http://localhost:8080/api/v1/contract/multi-delete",
+                    type: "DELETE",
+                    data: JSON.stringify({
+                        data: idArray
+                    }),
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    //xử lý khi thành công
+                    success: function () {
+                        for (let i = 0; i < idArray.length; i++) {
+                            let id = idArray[i];
+                            let idButton = "#btn-" + id;
+                            $(idButton).parent().parent().remove();
+                        }
+                        idArray.splice(0, idArray.length);
+                        console.log(idArray.length);
+                    },
+                    error: function () {
+                        console.log("Lỗi");
+                    }
+                });
+            }
+        });
+
+        $('#btn-confirm-no').click(function () {
+            idArray.splice(0, idArray.length);
+        });
+
+        $('#btn-multi-delete').click(function () {
+            $('#table-contract input[type=checkbox]').each(function () {
+                if (jQuery(this).is(":checked")) {
+                    idArray.push($(this).val());
+                }
+            });
+        });
+    });
+
+    function getIdToDelete(id) {
+        idArray.push(id);
+    }
+</script>
+</html>

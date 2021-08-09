@@ -3,7 +3,11 @@ package com.codegym.model.service.customer;
 import com.codegym.model.entity.about_customer.Customer;
 import com.codegym.model.service.GeneralService;
 
+import java.util.List;
+
 public interface CustomerService extends GeneralService<Customer, String> {
+    List<Customer> findAll();
+
     String checkId(String id);
 
     String checkName(String name);

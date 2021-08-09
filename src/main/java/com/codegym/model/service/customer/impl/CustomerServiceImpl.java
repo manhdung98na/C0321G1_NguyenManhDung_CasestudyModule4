@@ -30,6 +30,11 @@ class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public List<Customer> findAll() {
+        return customerRepository.findAllByDeletedIsFalse();
+    }
+
+    @Override
     public String checkId(String id) {
         String regexId = "^KH-[0-9]{4}$";
         if (!Pattern.matches(regexId, id)) {

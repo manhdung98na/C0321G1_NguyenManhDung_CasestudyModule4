@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -43,7 +44,7 @@ public class Service {
 
     private boolean isDeleted;
 
-    @OneToOne(mappedBy = "service")
-    private Contract contract;
+    @OneToMany(mappedBy = "service")
+    private Set<Contract> contract;
 
 }

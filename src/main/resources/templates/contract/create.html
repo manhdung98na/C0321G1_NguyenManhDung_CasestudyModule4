@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid">
+    <div class="row text-center mt-5">
+        <h3>CREATE NEW CONTRACT</h3>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <form action="/contract/create" method="post" th:object="${contract}" class="w-50 mt-3">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="contract-start-date" class="mt-2">Start date</label>
+                        <input type="date" class="form-control" id="contract-start-date"
+                               th:field="*{contractStartDate}" required>
+                        <input class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               id="error-start-date" style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="contract-end-date" class="mt-2">End date</label>
+                        <input type="date" class="form-control" id="contract-end-date"
+                               th:field="*{contractEndDate}" required>
+                        <input class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               id="error-end-date" style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="contract-customer" class="mt-2">Customer</label>
+                        <select class="form-select" id="contract-customer" th:field="*{customer}">
+                            <option th:each="customer : ${listCustomer}" th:value="${customer.customerId}"
+                                    th:text="${customer.customerId} +' | '+ ${customer.customerName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="contract-service" class="mt-2">Service</label>
+                        <select class="form-select" id="contract-service" th:field="*{service}">
+                            <option th:each="service : ${listService}" th:value="${service.serviceId}"
+                                    th:text="${service.serviceId} + ' | ' + ${service.serviceName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="contract-employee" class="mt-2">Employee</label>
+                        <select class="form-select" id="contract-employee" th:field="*{employee}">
+                            <option th:each="employee : ${listEmployee}" th:value="${employee.employeeId}"
+                                    th:text="${employee.employeeId} +' - '+ ${employee.employeeName}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="contract-total-money" class="mt-2">Total money</label>
+                        <div class="input-group">
+                            <input class="form-control bg-white" id="contract-total-money"
+                                   th:field="*{contractTotalMoney}" required readonly>
+                            <span class="input-group-text">VND</span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="contract-deposit" class="mt-2">Deposit</label>
+                        <div class="input-group">
+                            <input type="number" min="0" id="contract-deposit" class="form-control"
+                                   aria-describedby="basic-addon2" required th:field="*{contractDeposit}">
+                            <span class="input-group-text">VND</span></span>
+                        </div>
+                        <input class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" id="error-deposit" value="" hidden disabled>
+                    </div>
+                </div>
+
+                <!--button-->
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-dark m-1">
+                        <a href="/contract" class="text-decoration-none text-white">Back</a>
+                    </button>
+                    <button type="submit" class="btn btn-primary m-1" id="btn-create">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer"></footer>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#contract-deposit').change(function () {
+            let deposit = Number($('#contract-deposit').val());
+            let totalMoney = Number($('#contract-total-money').val());
+            if (deposit > totalMoney) {
+                $('#error-deposit').val("Can't be greater than Total money");
+                $('#error-deposit').attr("hidden", false);
+            } else {
+                $('#error-deposit').val("");
+            }
+        });
+
+        $('#contract-start-date').change(function () {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/contract/check/start-date/" + $(this).val(),
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-start-date').val(response);
+                    if ($('#error-deposit').val() === "" && $('#error-start-date').val() === "" && $('#error-end-date').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#contract-end-date').change(function () {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/contract/check/end-date/" + $(this).val() + "/" + $('#contract-start-date').val(),
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-end-date').val(response);
+                    if ($('#error-deposit').val() === "" && $('#error-start-date').val() === "" && $('#error-end-date').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#contract-service').change(function () {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/contract/get-total-money/" + $(this).val(),
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#contract-total-money').val(response);
+                },
+                error: function () {
+                    $('#contract-total-money').val("");
+                    console.log("Error function");
+                }
+            })
+        })
+
+        $('#contract-total-money').load(function () {
+            $.ajax({
+                url: "http://localhost:8080/api/v1/contract/get-total-money/" + $('#contract-service').val(),
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#contract-total-money').val(response);
+                },
+                error: function () {
+                    $('#contract-total-money').val("");
+                    console.log("Error function");
+                }
+            })
+        })
+    })
+</script>
+</html>

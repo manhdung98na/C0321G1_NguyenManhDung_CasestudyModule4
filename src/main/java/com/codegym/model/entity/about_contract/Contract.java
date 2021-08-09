@@ -1,6 +1,7 @@
 package com.codegym.model.entity.about_contract;
 
 import com.codegym.model.entity.about_customer.Customer;
+import com.codegym.model.entity.about_employee.EducationDegree;
 import com.codegym.model.entity.about_employee.Employee;
 import com.codegym.model.entity.about_service.Service;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -30,18 +32,20 @@ public class Contract {
 
     private Double contractTotalMoney;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Employee.class)
     @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
     private Employee employee;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Customer.class)
     @JoinColumn(name = "customer_id", referencedColumnName = "customerId")
     private Customer customer;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Service.class)
     @JoinColumn(name = "service_id", referencedColumnName = "serviceId")
     private Service service;
 
-    @OneToOne(mappedBy = "contract")
-    private ContractDetail contractDetail;
+    private boolean isAvailable;
+
+    @OneToMany(mappedBy = "contract")
+    private Set<ContractDetail> contractDetail;
 }

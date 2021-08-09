@@ -9,12 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
 public interface ServiceRepository extends JpaRepository<Service, String> {
     @Query("select s from Service s where s.isDeleted=false")
     Page<Service> findAllByDeletedIsFalse(Pageable pageable);
+
+    @Query("select s from Service s where s.isDeleted=false")
+    List<Service> findAllByDeletedIsFalse();
 
     @Query("select s from Service s where (s.serviceName like CONCAT('%',:search,'%') or s.serviceId like CONCAT('%',:search,'%')" +
             " or s.descriptionOtherConvenience like CONCAT('%',:search,'%') or s.standardRoom like CONCAT('%',:search,'%') " +

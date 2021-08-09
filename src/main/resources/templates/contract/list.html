@@ -7,64 +7,65 @@
 <div class="container-fluid m-0 p-0">
     <div class="row mt-3">
         <div class="col-12 text-center">
-            <h1>EMPLOYEE</h1>
+            <h1>CONTRACT</h1>
         </div>
     </div>
-<!--Create and Search-->
+    <!--Create and Search-->
     <div class="row">
         <div class="col-6">
             <button class="btn btn-primary m-2">
-                <a href="/employee/create" class="text-decoration-none text-white">Create</a>
+                <a href="/contract/create" class="text-decoration-none text-white">Create</a>
             </button>
         </div>
         <div class="col-6">
-            <form action="/employee/search" method="get" class="w-100">
+            <form action="/contract/search" method="get" class="w-100">
                 <div class="input-group" style="float: right; width: 50%">
                     <input type="text" class="form-control mt-2 mb-2 ms-2" placeholder="Search here" id="input-search"
                            name="input-search">
-                    <button class="btn btn-outline-secondary mt-2 mb-2 me-2" type="submit" id="button-addon2">Search
+                    <button class="btn btn-outline-secondary mt-2 mb-2 me-2" type="submit" id="button-addon2">Button
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="row" id="table-list-employee">
+    <div class="row" id="table-list-contract">
         <div class="col-12">
-            <table class="table table-hover" id="table-employee">
+            <table class="table table-hover" id="table-contract">
                 <thead class="table-dark">
                 <th>ID</th>
-                <th>Name</th>
-                <th>ID Card</th>
-                <th>Position</th>
-                <th>Division</th>
-                <th>Education</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Total money</th>
+                <th>Customer</th>
+                <th>Service</th>
                 <th>Action</th>
                 <th></th>
                 </thead>
                 <tbody>
-                <tr th:each="employee : ${listEmployee}">
+                <tr th:each="contract : ${listContract}">
                     <td>
-                        <a th:href="@{/employee/view/__${employee.employeeId}__}" th:text="${employee.employeeId}"
+                        <a th:href="@{/contract/view/__${contract.contractId}__}" th:text="${contract.contractId}"
                            class="text-dark"></a>
                     </td>
-                    <td th:text="${employee.employeeName}"></td>
-                    <td th:text="${employee.employeeIdCard}"></td>
-                    <td th:text="${employee.position.positionName}"></td>
-                    <td th:text="${employee.division.divisionName}"></td>
-                    <td th:text="${employee.educationDegree.educationDegreeName}"></td>
+                    <td th:text="${contract.contractStartDate}"></td>
+                    <td th:text="${contract.contractEndDate}"></td>
+                    <td th:text="${contract.contractTotalMoney}"></td>
+                    <td th:text="${contract.customer.customerName}"></td>
+                    <td th:text="${contract.service.serviceName}"></td>
                     <td>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal" th:id="${'btn-' + employee.employeeId}"
-                                th:value="${employee.employeeId}" onclick="getIdToDelete(this.value)">Delete
+                                data-bs-target="#exampleModal" th:id="${'btn-' + contract.contractId}"
+                                th:value="${contract.contractId}" onclick="getIdToDelete(this.value)">Delete
                         </button>
                     </td>
                     <td>
-                        <input type="checkbox" th:value="${employee.employeeId}">
+                        <input type="checkbox" th:value="${contract.contractId}">
                     </td>
                 </tr>
                 </tbody>
             </table>
+
             <!--Multiple delete-->
             <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete"
                     data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -77,18 +78,18 @@
         <div class="col-12">
             <nav aria-label="Pagination" class="d-flex justify-content-center">
                 <ul class="pagination">
-                    <li class="page-item" th:if="${listEmployee.hasPrevious()}">
-                        <a class="page-link" th:href="@{/employee(page=${listEmployee.number - 1})}"
+                    <li class="page-item" th:if="${listContract.hasPrevious()}">
+                        <a class="page-link" th:href="@{/contract(page=${listContract.number - 1})}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
                         <span class="page-link"
-                              th:text="${listEmployee.number + 1} + '/'  + ${listEmployee.totalPages}"></span>
+                              th:text="${listContract.number + 1} + '/'  + ${listContract.totalPages}"></span>
                     </li>
-                    <li class="page-item" th:if="${listEmployee.hasNext()}">
-                        <a class="page-link" th:href="@{/employee(page=${listEmployee.number + 1})}"
+                    <li class="page-item" th:if="${listContract.hasNext()}">
+                        <a class="page-link" th:href="@{/contract(page=${listContract.number + 1})}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
@@ -99,7 +100,7 @@
     </div>
     <!--Hết phân trang-->
 
-    <!-- Modal -->
+    <!--Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
          data-bs-keyboard="false" aria-labelledby="staticBackdropLabel">
         <div class="modal-dialog">
@@ -108,7 +109,7 @@
                     <h5 class="modal-title" id="exampleModalLabel">Delete Confirm?</h5>
                 </div>
                 <div class="modal-body">
-                    Are you sure to delete employee(s)?
+                    Are you sure to delete contract(s)?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-confirm-no">No
@@ -140,12 +141,11 @@
     let idArray = [];
     $(document).ready(function () {
         $('.toast').toast('show');
-        // $('.toast').fadeOut(3000);
 
         $('#btn-confirm-yes').click(function () {
             if (idArray.length !== 0) {
                 $.ajax({
-                    url: "http://localhost:8080/api/v1/employee/multi-delete",
+                    url: "http://localhost:8080/api/v1/contract/multi-delete",
                     type: "DELETE",
                     data: JSON.stringify({
                         data: idArray
@@ -176,7 +176,7 @@
         });
 
         $('#btn-multi-delete').click(function () {
-            $('#table-employee input[type=checkbox]').each(function () {
+            $('#table-contract input[type=checkbox]').each(function () {
                 if (jQuery(this).is(":checked")) {
                     idArray.push($(this).val());
                 }

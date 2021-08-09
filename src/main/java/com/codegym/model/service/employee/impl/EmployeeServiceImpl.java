@@ -18,7 +18,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeRepository repository;
 
-
     @Override
     public Page<Employee> findAll(Pageable pageable) {
         return repository.findAllByDeletedIsFalse(pageable);
@@ -44,6 +43,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Page<Employee> search(String search, Pageable pageable) {
         return repository.search(search, pageable);
+    }
+
+    @Override
+    public List<Employee> findAll() {
+        return repository.findAllByDeletedIsFalse();
     }
 
     @Override

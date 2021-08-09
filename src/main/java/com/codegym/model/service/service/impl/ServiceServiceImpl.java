@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -40,6 +41,11 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Page<com.codegym.model.entity.about_service.Service> search(String search, Pageable pageable) {
         return serviceRepository.search(search, pageable);
+    }
+
+    @Override
+    public List<com.codegym.model.entity.about_service.Service> findAll() {
+        return serviceRepository.findAllByDeletedIsFalse();
     }
 
     @Override

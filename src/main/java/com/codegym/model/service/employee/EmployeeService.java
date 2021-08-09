@@ -3,7 +3,11 @@ package com.codegym.model.service.employee;
 import com.codegym.model.entity.about_employee.Employee;
 import com.codegym.model.service.GeneralService;
 
+import java.util.List;
+
 public interface EmployeeService extends GeneralService<Employee, Integer> {
+    List<Employee> findAll();
+
     String checkName(String name);
 
     String checkBirthday(String birthday);

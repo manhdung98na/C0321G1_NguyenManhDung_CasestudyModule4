@@ -17,7 +17,7 @@ public class ContractDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer contractDetailId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = Contract.class)
     @JoinColumn(name = "contract_id", referencedColumnName = "contractId")
     private Contract contract;
 

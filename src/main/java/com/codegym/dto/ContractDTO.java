@@ -22,5 +22,6 @@ public class ContractDTO {
     private Employee employee;
     private Customer customer;
     private Service service;
+    private boolean isAvailable;
     private ContractDetail contractDetail;
 }

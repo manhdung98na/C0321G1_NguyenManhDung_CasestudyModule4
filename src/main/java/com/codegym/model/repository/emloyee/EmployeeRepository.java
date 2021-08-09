@@ -9,12 +9,16 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Repository
 @Transactional
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("select e from Employee e where e.isDeleted=false")
     Page<Employee> findAllByDeletedIsFalse(Pageable pageable);
+
+    @Query("select e from Employee e where e.isDeleted=false")
+    List<Employee> findAllByDeletedIsFalse();
 
     boolean existsByEmployeePhone(String phone);
 
