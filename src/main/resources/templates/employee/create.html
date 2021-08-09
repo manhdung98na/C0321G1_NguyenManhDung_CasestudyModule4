@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid">
+    <div class="row text-center mt-5">
+        <h3>CREATE NEW EMPLOYEE</h3>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <form action="/employee/create" method="post" th:object="${employee}" class="w-50 mt-3">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label for="employee-name" class="form-label mt-2">Name</label>
+                        <input type="text" class="form-control" id="employee-name" th:field="*{employeeName}" required>
+                        <input id="error-name" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="employee-birthday" class="mt-2">Birthday</label>
+                        <input type="date" class="form-control" id="employee-birthday"
+                               th:field="*{employeeBirthday}" required>
+                        <input class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               id="error-birthday" style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="employee-id-card" class="mt-2">ID Card</label>
+                        <input type="text" class="form-control" id="employee-id-card"
+                               th:field="*{employeeIdCard}" required>
+                        <input class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               id="error-id-card" style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="employee-salary" class="mt-2">Salary</label>
+                        <div class="input-group mb-3">
+                            <input type="number" min="1" id="employee-salary" class="form-control"
+                                   aria-describedby="basic-addon2" required th:field="*{employeeSalary}">
+                            <span class="input-group-text">VND</span></span>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="employee-phone" class="mt-2">Phone</label>
+                        <input type="text" class="form-control" id="employee-phone"
+                               th:field="*{employeePhone}" required>
+                        <input id="error-phone" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="employee-email" class="mt-2">Email</label>
+                        <input type="text" class="form-control" id="employee-email" th:field="*{employeeEmail}"
+                               required>
+                        <input id="error-email" class="form-text text-danger text-wrap border-0 bg-white d-block w-100"
+                               style="font-size: smaller" value="" hidden disabled>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="employee-address" class="mt-2">Address</label>
+                        <input type="text" class="form-control" id="employee-address"
+                               th:field="*{employeeAddress}" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="employee-position" class="mt-2">Position</label>
+                        <select class="form-select" id="employee-position" th:field="*{position}">
+                            <option th:each="type : ${position}" th:value="${type.positionId}"
+                                    th:text="${type.positionName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="employee-division" class="mt-2">Division</label>
+                        <select class="form-select" id="employee-division" th:field="*{division}">
+                            <option th:each="type : ${division}" th:value="${type.divisionId}"
+                                    th:text="${type.divisionName}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="employee-education" class="mt-2">Education</label>
+                        <select class="form-select" id="employee-education" th:field="*{educationDegree}">
+                            <option th:each="type : ${education}" th:value="${type.educationDegreeId}"
+                                    th:text="${type.educationDegreeName}"></option>
+                        </select>
+                    </div>
+                </div>
+                <!--button-->
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="btn btn-dark m-1">
+                        <a href="/employee" class="text-decoration-none text-white">Back</a>
+                    </button>
+                    <button type="submit" class="btn btn-primary m-1" id="btn-create">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer"></footer>
+</body>
+<script>
+    $(document).ready(function () {
+        $('#employee-name').change(function () {
+            let name = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/employee/check/name/" + name,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-name').val(response);
+                    if ($('#error-name').val() === "" && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#employee-birthday').change(function () {
+            let birthday = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/employee/check/birthday/" + birthday,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-birthday').val(response);
+                    if ($('#error-name').val() === "" && $('#error-birthday').val() === ""
+                        && $('#error-email').val() === "" && $('#error-phone').val() === ""
+                        && $('#error-id-card').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#employee-id-card').change(function () {
+            let idCard = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/employee/check/idcard/" + idCard,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-id-card').val(response);
+                    if ($('#error-name').val() === "" && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#employee-phone').change(function () {
+            let phone = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/employee/check/phone/" + phone,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-phone').val(response);
+                    if ($('#error-name').val() === "" && $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+
+        $('#employee-email').change(function () {
+            let email = $(this).val();
+            $.ajax({
+                url: "http://localhost:8080/api/v1/employee/check/email/" + email,
+                type: "GET",
+                dataType: "text",
+                success: function (response) {
+                    $('#error-email').val(response);
+                    if ($('#error-name').val() === ""&& $('#error-birthday').val() === "" && $('#error-email').val() === ""
+                        && $('#error-phone').val() === "" && $('#error-id-card').val() === "") {
+                        $('#btn-create').attr("disabled", false);
+                    } else {
+                        $('#btn-create').attr("disabled", true);
+                    }
+                },
+                error: function (response) {
+                    console.log("Error function " + response);
+                }
+            })
+        });
+    })
+</script>
+</html>

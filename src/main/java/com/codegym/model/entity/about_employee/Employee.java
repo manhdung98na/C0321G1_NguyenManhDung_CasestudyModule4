@@ -48,6 +48,8 @@ public class Employee {
     @JoinColumn(name = "username", referencedColumnName = "username")
     private User username;
 
+    private boolean isDeleted;
+
     @OneToOne(mappedBy = "employee")
     private Contract contract;
 }

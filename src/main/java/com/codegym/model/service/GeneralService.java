@@ -5,14 +5,14 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public interface GeneralService<E> {
+public interface GeneralService<E, T> {
     Page<E> findAll(Pageable pageable);
 
-    Optional<E> findById(String id);
+    Optional<E> findById(T id);
 
     E save(E e);
 
-    void delete(String id);
+    void delete(T id);
 
     Page<E> search(String search, Pageable pageable);
 }

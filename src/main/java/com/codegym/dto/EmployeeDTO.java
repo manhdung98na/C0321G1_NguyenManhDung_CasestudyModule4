@@ -26,4 +26,5 @@ public class EmployeeDTO {
     private EducationDegree educationDegree;
     private Division division;
     private User username;
+    private boolean isDeleted;
 }
