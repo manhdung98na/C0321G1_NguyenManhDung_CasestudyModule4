@@ -16,7 +16,9 @@ public interface ContractDetailRepository extends JpaRepository<ContractDetail, 
     @Query("select c from ContractDetail c where c.isDeleted = false and c.contract.isDeleted = false")
     Page<ContractDetail> findAllByDeletedIsFalse(Pageable pageable);
 
-    @Query("select c from ContractDetail c where (c.attachService.attachServiceName like CONCAT('%',:search,'%') " +
-            "or c.contract.contractId = :search) and c.isDeleted = false")
+    @Query("select c from ContractDetail c where c.attachService.attachServiceId = :attachServiceId and c.contract.contractId = :contractId and c.isDeleted = false")
+    ContractDetail findByAttachServiceIdAndContractId(Integer attachServiceId, Integer contractId);
+
+    @Query("select c from ContractDetail c where (c.attachService.attachServiceName like CONCAT('%',:search,'%') or c.contract.contractId = :search) and c.isDeleted = false")
     Page<ContractDetail> search(@Param("search") String search, Pageable pageable);
 }

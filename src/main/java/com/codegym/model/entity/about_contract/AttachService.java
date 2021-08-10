@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,6 +26,6 @@ public class AttachService {
 
     private String attachServiceStatus;
 
-    @OneToOne(mappedBy = "attachService")
-    private ContractDetail contractDetail;
+    @OneToMany(mappedBy = "attachService")
+    private Set<ContractDetail> contractDetail;
 }

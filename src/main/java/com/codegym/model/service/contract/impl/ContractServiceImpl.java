@@ -1,6 +1,7 @@
 package com.codegym.model.service.contract.impl;
 
 import com.codegym.model.entity.about_contract.Contract;
+import com.codegym.model.entity.about_contract.ContractDetail;
 import com.codegym.model.repository.contract.ContractRepository;
 import com.codegym.model.service.contract.ContractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,13 @@ public class ContractServiceImpl implements ContractService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public void calculateToTalMoney(ContractDetail contractDetail) {
+        Contract contract = contractDetail.getContract();
+        contract.setContractTotalMoney(contract.getContractTotalMoney() +
+                contractDetail.getQuantity() * contractDetail.getAttachService().getAttachServiceCost());
+        repository.save(contract);
     }
 }

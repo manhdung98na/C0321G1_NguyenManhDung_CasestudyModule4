@@ -39,11 +39,12 @@
                 <th>Total money</th>
                 <th>Customer</th>
                 <th>Service</th>
-                <th>Action</th>
-                <th></th>
+                <th class="col-2">Attach service</th>
+                <th style="width: 5%">Action</th>
+                <th style="width: 5%"></th>
                 </thead>
                 <tbody>
-                <tr th:each="contract : ${listContract}">
+                <tr class="align-middle" th:each="contract : ${listContract}">
                     <td>
                         <a th:href="@{/contract/view/__${contract.contractId}__}" th:text="${contract.contractId}"
                            class="text-dark"></a>
@@ -54,9 +55,20 @@
                     <td th:text="${contract.customer.customerName}"></td>
                     <td th:text="${contract.service.serviceName}"></td>
                     <td>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                data-bs-target="#exampleModal" th:id="${'btn-' + contract.contractId}"
-                                th:value="${contract.contractId}" onclick="getIdToDelete(this.value)">Delete
+                        <select class="form-select border-0" readonly="true" th:if="${contract.contractDetail.size()} > 0">
+                            <option th:text="${contract.contractDetail.size()} + ' attach service(s)'" selected></option>
+                            <option class="bg-light" th:each="contractDetail : ${contract.contractDetail}"
+                                    th:text="${contractDetail.attachService.attachServiceName} +' - '+ ${contractDetail.quantity} + 'unit(s)'"
+                                    style="pointer-events: none" disabled></option>
+                        </select>
+                        <select class="form-select border-0 bg-white" th:if="${contract.contractDetail.size()} <= 0" disabled>
+                            <option th:text="'no attach services'" selected></option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm" th:id="${'btn-' + contract.contractId}">
+                            <a th:href="@{/contract/attach-service/__${contract.contractId}__}"
+                                class="text-decoration-none text-white">Add A-T</a>
                         </button>
                     </td>
                     <td>
@@ -68,8 +80,7 @@
 
             <!--Multiple delete-->
             <button class="btn btn-danger d-flex position-absolute w-auto" style="right: 16px" id="btn-multi-delete"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal">
-                Multi Delete
+                    data-bs-toggle="modal" data-bs-target="#exampleModal">Delete
             </button>
         </div>
     </div>
@@ -183,9 +194,5 @@
             });
         });
     });
-
-    function getIdToDelete(id) {
-        idArray.push(id);
-    }
 </script>
 </html>

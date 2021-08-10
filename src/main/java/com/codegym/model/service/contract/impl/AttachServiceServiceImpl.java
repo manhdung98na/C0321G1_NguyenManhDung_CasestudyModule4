@@ -22,18 +22,28 @@ public class AttachServiceServiceImpl implements AttachServiceService {
     }
 
     @Override
+    public boolean decreaseUnit(AttachService attachService, Integer amount) {
+        if (attachService.getAttachServiceUnit() < amount){
+            return false;
+        }
+        attachService.setAttachServiceUnit(attachService.getAttachServiceUnit() - amount);
+        repository.save(attachService);
+        return true;
+    }
+
+    @Override
     public Page<AttachService> findAll(Pageable pageable) {
         return null;
     }
 
     @Override
     public Optional<AttachService> findById(Integer id) {
-        return Optional.empty();
+        return repository.findById(id);
     }
 
     @Override
     public AttachService save(AttachService attachService) {
-        return null;
+        return repository.save(attachService);
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.codegym.controller;
 
 import com.codegym.dto.ContractDTO;
+import com.codegym.dto.ContractDetailDTO;
 import com.codegym.model.entity.about_contract.Contract;
+import com.codegym.model.entity.about_contract.ContractDetail;
+import com.codegym.model.service.contract.AttachServiceService;
+import com.codegym.model.service.contract.ContractDetailService;
 import com.codegym.model.service.contract.ContractService;
 import com.codegym.model.service.customer.CustomerService;
 import com.codegym.model.service.employee.EmployeeService;
@@ -30,6 +34,10 @@ public class ContractController {
     private EmployeeService employeeService;
     @Autowired
     private ContractService contractService;
+    @Autowired
+    private ContractDetailService contractDetailService;
+    @Autowired
+    private AttachServiceService attachServiceService;
 
     @GetMapping("")
     public ModelAndView showList(@PageableDefault(value = 4) Pageable pageable) {
@@ -97,5 +105,40 @@ public class ContractController {
         model.addAttribute("listContract", list);
         model.addAttribute("searchContent", search);
         return "contract/search";
+    }
+
+    @GetMapping("/attach-service/{id}")
+    public ModelAndView showAttachService(@PathVariable Integer id) {
+        ModelAndView modelAndView;
+        ContractDetailDTO contractDetailDTO = new ContractDetailDTO();
+        Optional<Contract> contract = contractService.findById(id);
+        if (!contract.isPresent()){
+            modelAndView = new ModelAndView("contract/list");
+            modelAndView.addObject("status", "Fail");
+            modelAndView.addObject("statusContent", "Invalid ID Contract!");
+        }
+        contractDetailDTO.setContract(contract.get());
+        modelAndView = new ModelAndView("contract/attach_service");
+        modelAndView.addObject("contractDetail", contractDetailDTO);
+        modelAndView.addObject("listContract", contractService.findAll());
+        modelAndView.addObject("listAttachService", attachServiceService.findAll());
+        return modelAndView;
+    }
+
+    @PostMapping("/attach-service")
+    public String addAttachService(@ModelAttribute("contractDetail") ContractDetailDTO contractDetailDTO,
+                         RedirectAttributes redirectAttributes, Model model){
+        ContractDetail contractDetail = new ContractDetail();
+        BeanUtils.copyProperties(contractDetailDTO, contractDetail);
+        if (contractDetailService.save(contractDetail) == null){
+            model.addAttribute("listContract", contractService.findAll());
+            model.addAttribute("listAttachService", attachServiceService.findAll());
+            model.addAttribute("errorQuantity", "Can't be greater than Attach-service-unit");
+            return "contract/attach_service";
+        }
+
+        redirectAttributes.addFlashAttribute("status","Success");
+        redirectAttributes.addFlashAttribute("statusContent","Success to add AttachService!");
+        return "redirect:/contract";
     }
 }

@@ -21,7 +21,7 @@ public class ContractDetail {
     @JoinColumn(name = "contract_id", referencedColumnName = "contractId")
     private Contract contract;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = AttachService.class)
     @JoinColumn(name = "attach_service_id", referencedColumnName = "attachServiceId")
     private AttachService attachService;
 

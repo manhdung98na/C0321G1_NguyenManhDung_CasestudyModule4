@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AttachServiceService extends GeneralService<AttachService, Integer> {
     List<AttachService> findAll();
+
+    boolean decreaseUnit(AttachService attachService, Integer amount);
 }
