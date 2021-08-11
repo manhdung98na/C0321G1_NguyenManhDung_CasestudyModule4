@@ -20,6 +20,9 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     @Query("select c from Customer c where c.isDeleted=false")
     List<Customer> findAllByDeletedIsFalse();
 
+    @Query("select c from Customer c where c.customerId in (select ct.customer.customerId from Contract ct where ct.isDeleted = false) order by c.customerId")
+    List<Customer> findAllCustomerUsingService();
+
     boolean existsByCustomerIdCard(String customerIdCard);
 
     boolean existsByCustomerPhone(String customerPhone);

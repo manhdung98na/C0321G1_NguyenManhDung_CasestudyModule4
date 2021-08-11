@@ -9,4 +9,6 @@ public interface AttachServiceService extends GeneralService<AttachService, Inte
     List<AttachService> findAll();
 
     boolean decreaseUnit(AttachService attachService, Integer amount);
+
+    List<AttachService> findAllByCustomerId(String id);
 }

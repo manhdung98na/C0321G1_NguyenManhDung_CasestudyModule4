@@ -40,11 +40,13 @@ public class ContractDetailServiceImpl implements ContractDetailService {
                             contractDetail.getContract().getContractId());
             if (contractDetailFoundInDB != null){
                 contractDetailFoundInDB.setQuantity(contractDetailFoundInDB.getQuantity() + contractDetail.getQuantity());
-                contractService.calculateToTalMoney(contractDetailFoundInDB);
-                return repository.save(contractDetailFoundInDB);
+                repository.save(contractDetailFoundInDB);
+                contractService.calculateToTalMoney(contractDetailFoundInDB.getContract());
+                return contractDetailFoundInDB;
             }
-            contractService.calculateToTalMoney(contractDetail);
-            return repository.save(contractDetail);
+            repository.save(contractDetail);
+            contractService.calculateToTalMoney(contractDetail.getContract());
+            return contractDetail;
         }
         return null;
     }

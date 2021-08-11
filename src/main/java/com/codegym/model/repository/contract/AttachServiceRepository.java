@@ -13,4 +13,7 @@ import java.util.List;
 public interface AttachServiceRepository extends JpaRepository<AttachService, Integer> {
     @Query("select a from AttachService a where a.attachServiceUnit > 0")
     List<AttachService> findAllAvailable();
+
+    @Query("select cd.attachService from ContractDetail cd where cd.contract.customer.customerId = :customerId and cd.isDeleted = false and cd.contract.isDeleted = false and  cd.contract.customer.isDeleted = false")
+    List<AttachService> findAllByCustomerId(String customerId);
 }

@@ -107,7 +107,7 @@ public class ContractController {
         return "contract/search";
     }
 
-    @GetMapping("/attach-service/{id}")
+    @GetMapping("/contract-detail/{id}")
     public ModelAndView showAttachService(@PathVariable Integer id) {
         ModelAndView modelAndView;
         ContractDetailDTO contractDetailDTO = new ContractDetailDTO();
@@ -118,14 +118,14 @@ public class ContractController {
             modelAndView.addObject("statusContent", "Invalid ID Contract!");
         }
         contractDetailDTO.setContract(contract.get());
-        modelAndView = new ModelAndView("contract/attach_service");
+        modelAndView = new ModelAndView("contract/add_contract_detail");
         modelAndView.addObject("contractDetail", contractDetailDTO);
         modelAndView.addObject("listContract", contractService.findAll());
         modelAndView.addObject("listAttachService", attachServiceService.findAll());
         return modelAndView;
     }
 
-    @PostMapping("/attach-service")
+    @PostMapping("/contract-detail")
     public String addAttachService(@ModelAttribute("contractDetail") ContractDetailDTO contractDetailDTO,
                          RedirectAttributes redirectAttributes, Model model){
         ContractDetail contractDetail = new ContractDetail();
@@ -134,7 +134,7 @@ public class ContractController {
             model.addAttribute("listContract", contractService.findAll());
             model.addAttribute("listAttachService", attachServiceService.findAll());
             model.addAttribute("errorQuantity", "Can't be greater than Attach-service-unit");
-            return "contract/attach_service";
+            return "contract/add_contract_detail";
         }
 
         redirectAttributes.addFlashAttribute("status","Success");

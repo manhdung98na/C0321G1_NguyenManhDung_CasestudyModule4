@@ -1,5 +1,6 @@
 package com.codegym.model.service.contract.impl;
 
+import com.codegym.model.entity.about_contract.AttachService;
 import com.codegym.model.entity.about_contract.Contract;
 import com.codegym.model.entity.about_contract.ContractDetail;
 import com.codegym.model.repository.contract.ContractRepository;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ContractServiceImpl implements ContractService {
@@ -39,6 +41,9 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract save(Contract contract) {
+        Contract contractInDB = repository.getById(contract.getContractId());
+        contract.setContractDetail(contractInDB.getContractDetail());
+        calculateToTalMoney(contract);
         return repository.save(contract);
     }
 
@@ -83,10 +88,13 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public void calculateToTalMoney(ContractDetail contractDetail) {
-        Contract contract = contractDetail.getContract();
-        contract.setContractTotalMoney(contract.getContractTotalMoney() +
-                contractDetail.getQuantity() * contractDetail.getAttachService().getAttachServiceCost());
+    public void calculateToTalMoney(Contract contract) {
+        contract.setContractTotalMoney(0d);
+        for (ContractDetail ct: contract.getContractDetail()) {
+            AttachService attachService = ct.getAttachService();
+            contract.setContractTotalMoney(contract.getContractTotalMoney() + attachService.getAttachServiceCost() * ct.getQuantity());
+        }
+        contract.setContractTotalMoney(contract.getService().getServiceCost()+ contract.getContractTotalMoney());
         repository.save(contract);
     }
 }

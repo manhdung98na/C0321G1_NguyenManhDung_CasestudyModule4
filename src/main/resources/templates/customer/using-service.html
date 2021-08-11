@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="/layout::head">
+</head>
+<body>
+<nav th:replace="/layout::navbar"></nav>
+<div class="container-fluid m-0 p-0">
+    <div class="row mt-3">
+        <div class="col-12 text-center">
+            <h1>CUSTOMER USING SERVICE(s)</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form action="/customer/using-service/search" method="get" class="w-100">
+                <div class="input-group" style="float: right; width: 50%">
+                    <input type="text" class="form-control mt-2 mb-2 ms-2" placeholder="Search here" id="input-search"
+                           name="input-search">
+                    <button class="btn btn-outline-secondary mt-2 mb-2 me-2" type="submit" id="button-addon2">Search
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row" id="table-list-customer">
+        <div class="col-12">
+            <table class="table table-hover" id="table-customer">
+                <thead class="table-dark">
+                <th>ID</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Gender</th>
+                <th>Id card</th>
+                <th>Service</th>
+                <th class="col-2">Attach service</th>
+                </thead>
+                <tbody>
+                <tr th:each="customer : ${listCustomerUsing}">
+                    <td>
+                        <a th:href="@{/customer/view/__${customer.getKey().customerId}__}" th:text="${customer.getKey().customerId}"
+                           class="text-dark"></a>
+                    </td>
+                    <td th:text="${customer.getKey().customerName}"></td>
+                    <td th:text="${customer.getKey().customerType.customerTypeName}"></td>
+                    <td th:text="${customer.getKey().customerGender} == 1 ? 'Male' :
+                                    (${customer.getKey().customerGender} == 0 ? 'Female' : 'Other')"></td>
+                    <td th:text="${customer.getKey().customerIdCard}"></td>
+                    <td>
+                        <select class="form-select border-0" readonly="true" >
+                            <option th:text="${customer.getKey().contract.size()} + ' service(s)'" selected></option>
+                            <option class="bg-secondary text-white" th:each="contract : ${customer.getKey().contract}"
+                                    th:text="${contract.service.serviceName}"
+                                    style="pointer-events: none" disabled></option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select border-0 bg-white" readonly="true" th:disabled="${customer.getValue().size() == 0}">
+                            <option th:text="${customer.getValue().size()} + ' attach service(s)'" selected></option>
+                            <option class="bg-secondary text-white" th:each="attachService : ${customer.getValue()}"
+                                    th:text="${attachService.attachServiceName}"
+                                    style="pointer-events: none" disabled></option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<footer th:replace="/layout::footer">
+</footer>
+</body>
+</html>

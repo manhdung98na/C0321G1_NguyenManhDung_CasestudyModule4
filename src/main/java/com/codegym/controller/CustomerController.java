@@ -1,7 +1,9 @@
 package com.codegym.controller;
 
 import com.codegym.dto.CustomerDTO;
+import com.codegym.model.entity.about_contract.AttachService;
 import com.codegym.model.entity.about_customer.Customer;
+import com.codegym.model.service.contract.AttachServiceService;
 import com.codegym.model.service.customer.CustomerService;
 import com.codegym.model.service.customer.CustomerTypeService;
 import org.springframework.beans.BeanUtils;
@@ -15,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/customer")
@@ -24,6 +26,8 @@ public class CustomerController {
     private CustomerService customerService;
     @Autowired
     private CustomerTypeService customerTypeService;
+    @Autowired
+    private AttachServiceService attachServiceService;
 
     @GetMapping("")
     public ModelAndView showList(@PageableDefault(value = 4) Pageable pageable) {
@@ -88,5 +92,18 @@ public class CustomerController {
         model.addAttribute("listCustomer", list);
         model.addAttribute("searchContent", search);
         return "customer/search";
+    }
+
+    @GetMapping("/using-service")
+    public ModelAndView showCustomerUsingService(){
+        ModelAndView modelAndView = new ModelAndView("customer/using-service");
+        List<Customer> list = customerService.findCustomerUsingService();
+        Map<Customer, List<AttachService>> map = new LinkedHashMap<>();
+        for (Customer o : list){
+            List<AttachService> attachServices =attachServiceService.findAllByCustomerId(o.getCustomerId());
+            map.put(o, attachServices);
+        }
+        modelAndView.addObject("listCustomerUsing", map);
+        return modelAndView;
     }
 }

@@ -32,6 +32,11 @@ public class AttachServiceServiceImpl implements AttachServiceService {
     }
 
     @Override
+    public List<AttachService> findAllByCustomerId(String id) {
+        return repository.findAllByCustomerId(id);
+    }
+
+    @Override
     public Page<AttachService> findAll(Pageable pageable) {
         return null;
     }

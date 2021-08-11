@@ -13,5 +13,5 @@ public interface ContractService extends GeneralService<Contract, Integer> {
 
     String checkEndDate(String endDate, String startDate);
 
-    void calculateToTalMoney(ContractDetail contractDetail);
+    void calculateToTalMoney(Contract contract);
 }
