@@ -23,7 +23,7 @@ public class AttachServiceServiceImpl implements AttachServiceService {
 
     @Override
     public boolean decreaseUnit(AttachService attachService, Integer amount) {
-        if (attachService.getAttachServiceUnit() < amount){
+        if (attachService.getAttachServiceUnit() < amount) {
             return false;
         }
         attachService.setAttachServiceUnit(attachService.getAttachServiceUnit() - amount);

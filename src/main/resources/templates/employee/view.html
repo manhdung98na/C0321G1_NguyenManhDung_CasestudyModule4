@@ -109,7 +109,8 @@
                 <tr>
                     <th>Education</th>
                     <td>
-                        <select class="form-select border-0 w-100 bg-white" id="input-education" th:field="*{educationDegree}"
+                        <select class="form-select border-0 w-100 bg-white" id="input-education"
+                                th:field="*{educationDegree}"
                                 required disabled>
                             <option th:each="type : ${education}" th:value="${type.educationDegreeId}"
                                     th:text="${type.educationDegreeName}"

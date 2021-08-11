@@ -1,6 +1,5 @@
 package com.codegym.model.service.contract.impl;
 
-import com.codegym.model.entity.about_contract.Contract;
 import com.codegym.model.entity.about_contract.ContractDetail;
 import com.codegym.model.repository.contract.ContractDetailRepository;
 import com.codegym.model.service.contract.AttachServiceService;
@@ -38,7 +37,7 @@ public class ContractDetailServiceImpl implements ContractDetailService {
             ContractDetail contractDetailFoundInDB =
                     repository.findByAttachServiceIdAndContractId(contractDetail.getAttachService().getAttachServiceId(),
                             contractDetail.getContract().getContractId());
-            if (contractDetailFoundInDB != null){
+            if (contractDetailFoundInDB != null) {
                 contractDetailFoundInDB.setQuantity(contractDetailFoundInDB.getQuantity() + contractDetail.getQuantity());
                 repository.save(contractDetailFoundInDB);
                 contractService.calculateToTalMoney(contractDetailFoundInDB.getContract());

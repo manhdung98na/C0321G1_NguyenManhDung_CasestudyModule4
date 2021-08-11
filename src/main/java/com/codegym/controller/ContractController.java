@@ -112,7 +112,7 @@ public class ContractController {
         ModelAndView modelAndView;
         ContractDetailDTO contractDetailDTO = new ContractDetailDTO();
         Optional<Contract> contract = contractService.findById(id);
-        if (!contract.isPresent()){
+        if (!contract.isPresent()) {
             modelAndView = new ModelAndView("contract/list");
             modelAndView.addObject("status", "Fail");
             modelAndView.addObject("statusContent", "Invalid ID Contract!");
@@ -127,18 +127,18 @@ public class ContractController {
 
     @PostMapping("/contract-detail")
     public String addAttachService(@ModelAttribute("contractDetail") ContractDetailDTO contractDetailDTO,
-                         RedirectAttributes redirectAttributes, Model model){
+                                   RedirectAttributes redirectAttributes, Model model) {
         ContractDetail contractDetail = new ContractDetail();
         BeanUtils.copyProperties(contractDetailDTO, contractDetail);
-        if (contractDetailService.save(contractDetail) == null){
+        if (contractDetailService.save(contractDetail) == null) {
             model.addAttribute("listContract", contractService.findAll());
             model.addAttribute("listAttachService", attachServiceService.findAll());
             model.addAttribute("errorQuantity", "Can't be greater than Attach-service-unit");
             return "contract/add_contract_detail";
         }
 
-        redirectAttributes.addFlashAttribute("status","Success");
-        redirectAttributes.addFlashAttribute("statusContent","Success to add AttachService!");
+        redirectAttributes.addFlashAttribute("status", "Success");
+        redirectAttributes.addFlashAttribute("statusContent", "Success to add AttachService!");
         return "redirect:/contract";
     }
 }

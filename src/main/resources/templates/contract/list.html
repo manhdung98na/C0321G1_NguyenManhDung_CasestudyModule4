@@ -55,9 +55,12 @@
                     <td th:text="${contract.customer.customerName}"></td>
                     <td th:text="${contract.service.serviceName}"></td>
                     <td>
-                        <select class="form-select border-0 bg-white" readonly="true" th:disabled="${contract.contractDetail.size()} <= 0">
-                            <option th:text="${contract.contractDetail.size()} + ' attach service(s)'" selected></option>
-                            <option class="bg-secondary text-white" th:each="contractDetail : ${contract.contractDetail}"
+                        <select class="form-select border-0 bg-white" readonly="true"
+                                th:disabled="${contract.contractDetail.size()} <= 0">
+                            <option th:text="${contract.contractDetail.size()} + ' attach service(s)'"
+                                    selected></option>
+                            <option class="bg-secondary text-white"
+                                    th:each="contractDetail : ${contract.contractDetail}"
                                     th:text="${contractDetail.attachService.attachServiceName} +' - '+ ${contractDetail.quantity} + 'unit(s)'"
                                     style="pointer-events: none" disabled></option>
                         </select>
@@ -65,7 +68,7 @@
                     <td>
                         <button type="button" class="btn btn-success btn-sm" th:id="${'btn-' + contract.contractId}">
                             <a th:href="@{/contract/contract-detail/__${contract.contractId}__}"
-                                class="text-decoration-none text-white">Add A-T</a>
+                               class="text-decoration-none text-white">Add A-T</a>
                         </button>
                     </td>
                     <td>

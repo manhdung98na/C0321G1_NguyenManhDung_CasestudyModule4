@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ContractServiceImpl implements ContractService {
@@ -41,10 +40,13 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract save(Contract contract) {
-        Contract contractInDB = repository.getById(contract.getContractId());
-        contract.setContractDetail(contractInDB.getContractDetail());
+        if (contract.getContractId() == null) {
+            return repository.save(contract);
+        }
+        Optional<Contract> contractInDB = repository.findById(contract.getContractId());
+        contract.setContractDetail(contractInDB.get().getContractDetail());
         calculateToTalMoney(contract);
-        return repository.save(contract);
+        return repository.save(contractInDB.get());
     }
 
     @Override
@@ -90,11 +92,11 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public void calculateToTalMoney(Contract contract) {
         contract.setContractTotalMoney(0d);
-        for (ContractDetail ct: contract.getContractDetail()) {
+        for (ContractDetail ct : contract.getContractDetail()) {
             AttachService attachService = ct.getAttachService();
             contract.setContractTotalMoney(contract.getContractTotalMoney() + attachService.getAttachServiceCost() * ct.getQuantity());
         }
-        contract.setContractTotalMoney(contract.getService().getServiceCost()+ contract.getContractTotalMoney());
+        contract.setContractTotalMoney(contract.getService().getServiceCost() + contract.getContractTotalMoney());
         repository.save(contract);
     }
 }

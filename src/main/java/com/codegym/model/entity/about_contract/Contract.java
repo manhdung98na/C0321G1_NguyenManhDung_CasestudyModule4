@@ -1,7 +1,6 @@
 package com.codegym.model.entity.about_contract;
 
 import com.codegym.model.entity.about_customer.Customer;
-import com.codegym.model.entity.about_employee.EducationDegree;
 import com.codegym.model.entity.about_employee.Employee;
 import com.codegym.model.entity.about_service.Service;
 import lombok.AllArgsConstructor;

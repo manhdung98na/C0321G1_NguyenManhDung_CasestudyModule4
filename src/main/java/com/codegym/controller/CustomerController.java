@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/customer")
@@ -95,12 +98,12 @@ public class CustomerController {
     }
 
     @GetMapping("/using-service")
-    public ModelAndView showCustomerUsingService(){
+    public ModelAndView showCustomerUsingService() {
         ModelAndView modelAndView = new ModelAndView("customer/using-service");
         List<Customer> list = customerService.findCustomerUsingService();
         Map<Customer, List<AttachService>> map = new LinkedHashMap<>();
-        for (Customer o : list){
-            List<AttachService> attachServices =attachServiceService.findAllByCustomerId(o.getCustomerId());
+        for (Customer o : list) {
+            List<AttachService> attachServices = attachServiceService.findAllByCustomerId(o.getCustomerId());
             map.put(o, attachServices);
         }
         modelAndView.addObject("listCustomerUsing", map);

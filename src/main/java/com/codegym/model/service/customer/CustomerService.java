@@ -2,8 +2,6 @@ package com.codegym.model.service.customer;
 
 import com.codegym.model.entity.about_customer.Customer;
 import com.codegym.model.service.GeneralService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

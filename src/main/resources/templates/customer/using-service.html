@@ -37,7 +37,8 @@
                 <tbody>
                 <tr th:each="customer : ${listCustomerUsing}">
                     <td>
-                        <a th:href="@{/customer/view/__${customer.getKey().customerId}__}" th:text="${customer.getKey().customerId}"
+                        <a th:href="@{/customer/view/__${customer.getKey().customerId}__}"
+                           th:text="${customer.getKey().customerId}"
                            class="text-dark"></a>
                     </td>
                     <td th:text="${customer.getKey().customerName}"></td>
@@ -46,7 +47,7 @@
                                     (${customer.getKey().customerGender} == 0 ? 'Female' : 'Other')"></td>
                     <td th:text="${customer.getKey().customerIdCard}"></td>
                     <td>
-                        <select class="form-select border-0" readonly="true" >
+                        <select class="form-select border-0" readonly="true">
                             <option th:text="${customer.getKey().contract.size()} + ' service(s)'" selected></option>
                             <option class="bg-secondary text-white" th:each="contract : ${customer.getKey().contract}"
                                     th:text="${contract.service.serviceName}"
@@ -54,7 +55,8 @@
                         </select>
                     </td>
                     <td>
-                        <select class="form-select border-0 bg-white" readonly="true" th:disabled="${customer.getValue().size() == 0}">
+                        <select class="form-select border-0 bg-white" readonly="true"
+                                th:disabled="${customer.getValue().size() == 0}">
                             <option th:text="${customer.getValue().size()} + ' attach service(s)'" selected></option>
                             <option class="bg-secondary text-white" th:each="attachService : ${customer.getValue()}"
                                     th:text="${attachService.attachServiceName}"
